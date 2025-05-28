@@ -7,53 +7,54 @@ import sys
 import re
 from chat_ui import Color
 
-# 图片分析ASCII艺术
+# 图片分析ASCII艺术 - 现代简约风格
 VISION_ASCII = """
-    _____
-   /     \\
-  | o   o |
-  |   ^   |
-   \\_____/
-    _|_|_
+    ┌─────┐
+    │ ◈◈◈ │
+    │ ─┼─ │
+    │ ◈◈◈ │
+    └─────┘
 """
 
 def print_vision_welcome():
     """打印图片分析功能欢迎信息"""
-    print(f"\n{Color.CYAN}{Color.BOLD}")
-    print("="*60)
-    print("                蓝心AI图片分析助手                ")
-    print("="*60)
+    print(f"\n{Color.BG_GRAY}{Color.WHITE}{Color.BOLD}")
+    print("┌" + "─" * 58 + "┐")
+    print("│" + " " * 58 + "│")
+    print("│" + "            蓝心AI图片分析助手            ".center(58) + "│")
+    print("│" + " " * 58 + "│")
+    print("└" + "─" * 58 + "┘")
     print(f"{Color.RESET}")
-    print(f"{Color.YELLOW}输入 'back' 返回聊天模式{Color.RESET}\n")
-    print(f"{Color.CYAN}支持命令: {Color.RESET}")
-    print(f"  {Color.GREEN}/analyze <图片路径> [提示词] {Color.RESET}- 分析图片")
-    print(f"  {Color.GREEN}/browse {Color.RESET}- 浏览图片目录")
-    print(f"  {Color.GREEN}/models {Color.RESET}- 显示可用模型")
-    print(f"  {Color.GREEN}/set model <模型名称> {Color.RESET}- 设置使用的模型")
-    print(f"  {Color.GREEN}/examples {Color.RESET}- 显示分析提示词示例\n")
+    print(f"{Color.GRAY}● 输入 'back' 返回聊天模式{Color.RESET}\n")
+    print(f"{Color.BRIGHT_BLUE}支持命令: {Color.RESET}")
+    print(f"  {Color.BRIGHT_CYAN}○ /analyze <图片路径> [提示词] {Color.RESET}- 分析图片")
+    print(f"  {Color.BRIGHT_CYAN}○ /browse {Color.RESET}- 浏览图片目录")
+    print(f"  {Color.BRIGHT_CYAN}○ /models {Color.RESET}- 显示可用模型")
+    print(f"  {Color.BRIGHT_CYAN}○ /set model <模型名称> {Color.RESET}- 设置使用的模型")
+    print(f"  {Color.BRIGHT_CYAN}○ /examples {Color.RESET}- 显示分析提示词示例\n")
 
 def print_vision_header():
     """打印图片分析模式标题"""
-    print(f"\n{Color.CYAN}{Color.BOLD}[图片分析模式]{Color.RESET}\n")
+    print(f"\n{Color.BRIGHT_CYAN}{Color.BOLD}┌─{' 图片分析模式 ':─^50}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_CYAN}└{'─'*58}┘{Color.RESET}\n")
 
 def print_vision_prompt():
     """打印图片分析提示符"""
-    print(f"{Color.BLUE}{Color.BOLD}分析>>> {Color.RESET}", end="", flush=True)
+    print(f"{Color.BRIGHT_BLUE}{Color.BOLD}分析>>> {Color.RESET}", end="", flush=True)
     return input()
 
 def print_models():
     """打印可用的图片分析模型"""
-    print(f"\n{Color.CYAN}{Color.BOLD}可用的图片分析模型:{Color.RESET}")
-    print(f"{Color.YELLOW}{'模型名称':<20} | {'说明'}{Color.RESET}")
-    print("-" * 60)
-    print(f"BlueLM-Vision-prd    | 图片理解、文本创作、文本提取，上下文4096")
-    print(f"vivo-BlueLM-V-2.0    | 文本提取，输入+输出 2048token")
-    print("\n")
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 可用的图片分析模型 ':─^48}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.GRAY}{'模型名称':<20} | {'说明'}{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.GRAY}{'─'*56}{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} BlueLM-Vision-prd    | 图片理解、文本创作、文本提取，上下文4096")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} vivo-BlueLM-V-2.0    | 文本提取，输入+输出 2048token")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def print_examples():
     """打印图片分析提示词示例"""
-    print(f"\n{Color.CYAN}{Color.BOLD}图片分析提示词示例:{Color.RESET}")
-    print("-" * 60)
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 图片分析提示词示例 ':─^48}─┐{Color.RESET}")
     
     examples = [
         ("描述图片的内容", "获取图片的基本描述"),
@@ -69,19 +70,18 @@ def print_examples():
     ]
     
     for i, (prompt, desc) in enumerate(examples, 1):
-        print(f"{Color.YELLOW}{i}.{Color.RESET} {prompt}")
-        print(f"   {Color.CYAN}{desc}{Color.RESET}")
-        print("")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {i}. {prompt}")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET}    {Color.GRAY}{desc}{Color.RESET}")
     
-    print("\n")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def print_browse_images(directory="./"):
     """浏览指定目录中的图片"""
     supported_extensions = [".jpg", ".jpeg", ".png", ".bmp", ".gif"]
     
-    print(f"\n{Color.CYAN}{Color.BOLD}图片目录浏览:{Color.RESET}")
-    print(f"{Color.YELLOW}当前目录: {os.path.abspath(directory)}{Color.RESET}")
-    print("-" * 60)
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 图片目录浏览 ':─^50}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} 当前目录: {os.path.abspath(directory)}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.GRAY}{'─'*56}{Color.RESET}")
     
     image_files = []
     for file in os.listdir(directory):
@@ -90,7 +90,8 @@ def print_browse_images(directory="./"):
             image_files.append((file, os.path.getsize(file_path)))
     
     if not image_files:
-        print(f"{Color.RED}未找到图片文件!{Color.RESET}")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.RED}未找到图片文件!{Color.RESET}")
+        print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
         return
     
     # 按文件名排序
@@ -99,27 +100,28 @@ def print_browse_images(directory="./"):
     # 打印图片列表
     for i, (file, size) in enumerate(image_files, 1):
         size_str = f"{size / 1024:.1f} KB" if size < 1024 * 1024 else f"{size / (1024 * 1024):.1f} MB"
-        print(f"{i}. {file} ({size_str})")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {i}. {file} ({size_str})")
     
-    print(f"\n{Color.YELLOW}要分析图片，请输入: /analyze <文件名> [提示词]{Color.RESET}")
-    print("\n")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.GRAY}要分析图片，请输入: /analyze <文件名> [提示词]{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def print_analyzing_animation(seconds=3):
     """打印分析过程的动画，持续指定的秒数"""
     frames = [
-        "🔍  .     ",
-        "🔍  ..    ",
-        "🔍  ...   ",
-        "🔍  ....  ",
-        "🔍  ..... ",
-        "🔍  ......",
+        "⚪⚪⚪⚪⚪",
+        "⚫⚪⚪⚪⚪",
+        "⚫⚫⚪⚪⚪",
+        "⚫⚫⚫⚪⚪",
+        "⚫⚫⚫⚫⚪",
+        "⚫⚫⚫⚫⚫",
     ]
     
     start_time = time.time()
     frame_index = 0
     
     while time.time() - start_time < seconds:
-        sys.stdout.write(f"\r{Color.CYAN}{Color.BOLD}图片分析中 {frames[frame_index]}{Color.RESET}")
+        sys.stdout.write(f"\r{Color.BRIGHT_BLUE}{Color.BOLD}图片分析中 {frames[frame_index]}{Color.RESET}")
         sys.stdout.flush()
         frame_index = (frame_index + 1) % len(frames)
         time.sleep(0.2)
@@ -137,10 +139,10 @@ def print_image_info(image_path):
         size = os.path.getsize(image_path)
         size_str = f"{size / 1024:.1f} KB" if size < 1024 * 1024 else f"{size / (1024 * 1024):.1f} MB"
         
-        print(f"\n{Color.CYAN}图片信息:{Color.RESET}")
-        print(f"{Color.YELLOW}路径: {Color.RESET}{os.path.abspath(image_path)}")
-        print(f"{Color.YELLOW}大小: {Color.RESET}{size_str}")
-        print("\n")
+        print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 图片信息 ':─^52}─┐{Color.RESET}")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET} 路径: {os.path.abspath(image_path)}")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET} 大小: {size_str}")
+        print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
         return True
     except Exception as e:
         print(f"{Color.RED}读取图片信息失败: {str(e)}{Color.RESET}")
@@ -148,40 +150,42 @@ def print_image_info(image_path):
 
 def print_analysis_result(result):
     """打印图片分析结果"""
-    print(f"\n{Color.GREEN}{Color.BOLD}分析结果:{Color.RESET}\n")
-    print(f"{Color.CYAN}{result}{Color.RESET}\n")
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 分析结果 ':─^52}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {result}")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def print_streaming_analysis_result(chunk_generator):
     """打印流式分析结果"""
-    print(f"\n{Color.GREEN}{Color.BOLD}分析结果:{Color.RESET}\n")
-    print(f"{Color.CYAN}", end="", flush=True)
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 分析结果 ':─^52}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} ", end="", flush=True)
     
     full_response = ""
     for chunk in chunk_generator:
         print(chunk, end="", flush=True)
         full_response += chunk
     
-    print(f"{Color.RESET}\n")
+    print(f"\n{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
     return full_response
 
 def print_help_vision():
     """打印图片分析帮助信息"""
-    print(f"\n{Color.CYAN}{Color.BOLD}图片分析命令帮助:{Color.RESET}")
-    print(f"  {Color.GREEN}/analyze <图片路径> [提示词] {Color.RESET}- 分析图片")
-    print(f"    例如: /analyze test.jpg 描述图片的内容")
-    print(f"    如果不提供提示词，将使用默认提示词'描述图片的内容'")
-    
-    print(f"\n  {Color.GREEN}/browse [目录路径] {Color.RESET}- 浏览指定目录中的图片")
-    print(f"    例如: /browse ./images")
-    print(f"    如果不提供目录路径，将浏览当前目录")
-    
-    print(f"\n  {Color.GREEN}/models {Color.RESET}- 显示可用的图片分析模型")
-    print(f"  {Color.GREEN}/set model <模型名称> {Color.RESET}- 设置使用的模型")
-    print(f"    例如: /set model BlueLM-Vision-prd")
-    
-    print(f"\n  {Color.GREEN}/examples {Color.RESET}- 显示分析提示词示例")
-    print(f"  {Color.GREEN}/back {Color.RESET}- 返回聊天模式")
-    print(f"  {Color.GREEN}/help {Color.RESET}- 显示此帮助信息\n")
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 图片分析命令帮助 ':─^48}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/analyze <图片路径> [提示词] {Color.RESET}- 分析图片")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   例如: /analyze test.jpg 描述图片的内容")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   如果不提供提示词，将使用默认提示词'描述图片的内容'")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/browse [目录路径] {Color.RESET}- 浏览指定目录中的图片")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   例如: /browse ./images")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   如果不提供目录路径，将浏览当前目录")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/models {Color.RESET}- 显示可用的图片分析模型")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/set model <模型名称> {Color.RESET}- 设置使用的模型")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   例如: /set model BlueLM-Vision-prd")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/examples {Color.RESET}- 显示分析提示词示例")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/back {Color.RESET}- 返回聊天模式")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/help {Color.RESET}- 显示此帮助信息")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def parse_analyze_command(command):
     """解析图片分析命令及参数

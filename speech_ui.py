@@ -7,78 +7,82 @@ import sys
 import re
 from chat_ui import Color
 
-# 语音识别ASCII艺术
+# 语音识别ASCII艺术 - 现代简约风格
 SPEECH_ASCII = """
-  __   __
- /  \\/  \\
-|        |
-|  (○○)  |
- \\  \\/  /
-  \\____/
+    ┌─────┐
+    │  ≡  │
+    │ ≡≡≡ │
+    │  ≡  │
+    └─────┘
 """
 
 def print_speech_welcome():
     """打印语音识别功能欢迎信息"""
-    print(f"\n{Color.CYAN}{Color.BOLD}")
-    print("="*60)
-    print("                蓝心AI语音识别助手                ")
-    print("="*60)
+    print(f"\n{Color.BG_GRAY}{Color.WHITE}{Color.BOLD}")
+    print("┌" + "─" * 58 + "┐")
+    print("│" + " " * 58 + "│")
+    print("│" + "            蓝心AI语音识别助手            ".center(58) + "│")
+    print("│" + " " * 58 + "│")
+    print("└" + "─" * 58 + "┘")
     print(f"{Color.RESET}")
-    print(f"{Color.YELLOW}输入 'back' 返回聊天模式{Color.RESET}\n")
-    print(f"{Color.CYAN}支持命令: {Color.RESET}")
-    print(f"  {Color.GREEN}/record [持续时间] {Color.RESET}- 录音并识别")
-    print(f"  {Color.GREEN}/recognize <文件路径> {Color.RESET}- 识别音频文件")
-    print(f"  {Color.GREEN}/save <文件名> [持续时间] {Color.RESET}- 录音并保存")
-    print(f"  {Color.GREEN}/files {Color.RESET}- 列出音频文件目录\n")
+    print(f"{Color.GRAY}● 输入 'back' 返回聊天模式{Color.RESET}\n")
+    print(f"{Color.BRIGHT_BLUE}支持命令: {Color.RESET}")
+    print(f"  {Color.BRIGHT_CYAN}○ /record [持续时间] {Color.RESET}- 录音并识别")
+    print(f"  {Color.BRIGHT_CYAN}○ /recognize <文件路径> {Color.RESET}- 识别音频文件")
+    print(f"  {Color.BRIGHT_CYAN}○ /save <文件名> [持续时间] {Color.RESET}- 录音并保存")
+    print(f"  {Color.BRIGHT_CYAN}○ /files {Color.RESET}- 列出音频文件目录\n")
 
 def print_speech_header():
     """打印语音识别模式标题"""
-    print(f"\n{Color.CYAN}{Color.BOLD}[语音识别模式]{Color.RESET}\n")
+    print(f"\n{Color.BRIGHT_CYAN}{Color.BOLD}┌─{' 语音识别模式 ':─^50}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_CYAN}└{'─'*58}┘{Color.RESET}\n")
 
 def print_speech_prompt():
     """打印语音识别提示符"""
-    print(f"{Color.MAGENTA}{Color.BOLD}语音>>> {Color.RESET}", end="", flush=True)
+    print(f"{Color.BRIGHT_BLUE}{Color.BOLD}语音>>> {Color.RESET}", end="", flush=True)
     return input()
 
 def print_recording_animation(seconds):
     """打印录音过程的动画，持续指定的秒数"""
     frames = [
-        "🎤  .     ",
-        "🎤  ..    ",
-        "🎤  ...   ",
-        "🎤  ....  ",
-        "🎤  ..... ",
-        "🎤  ......",
+        "⚪⚪⚪⚪⚪",
+        "⚫⚪⚪⚪⚪",
+        "⚫⚫⚪⚪⚪",
+        "⚫⚫⚫⚪⚪",
+        "⚫⚫⚫⚫⚪",
+        "⚫⚫⚫⚫⚫",
     ]
     
     start_time = time.time()
     frame_index = 0
     
-    print("\n开始录音...\n")
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 开始录音 ':─^52}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
     
     while time.time() - start_time < seconds:
-        sys.stdout.write(f"\r{Color.CYAN}{Color.BOLD}录音中 {frames[frame_index]}{Color.RESET}")
+        sys.stdout.write(f"\r{Color.BRIGHT_BLUE}{Color.BOLD}录音中 {frames[frame_index]}{Color.RESET}")
         sys.stdout.flush()
         frame_index = (frame_index + 1) % len(frames)
         time.sleep(0.2)
     
     sys.stdout.write("\r" + " " * 50 + "\r")
     sys.stdout.flush()
-    print("\n录音结束，正在处理...\n")
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 录音结束，正在处理 ':─^46}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def print_recognizing_animation():
     """打印识别过程的动画"""
     frames = [
-        "🧠  .     ",
-        "🧠  ..    ",
-        "🧠  ...   ",
-        "🧠  ....  ",
-        "🧠  ..... ",
-        "🧠  ......",
+        "⚪⚪⚪⚪⚪",
+        "⚫⚪⚪⚪⚪",
+        "⚫⚫⚪⚪⚪",
+        "⚫⚫⚫⚪⚪",
+        "⚫⚫⚫⚫⚪",
+        "⚫⚫⚫⚫⚫",
     ]
     
     for i in range(10):  # 播放10帧动画
-        sys.stdout.write(f"\r{Color.CYAN}{Color.BOLD}识别中 {frames[i % len(frames)]}{Color.RESET}")
+        sys.stdout.write(f"\r{Color.BRIGHT_BLUE}{Color.BOLD}识别中 {frames[i % len(frames)]}{Color.RESET}")
         sys.stdout.flush()
         time.sleep(0.2)
     
@@ -88,11 +92,14 @@ def print_recognizing_animation():
 def print_speech_result(result_text):
     """打印语音识别结果"""
     if not result_text:
-        print(f"\n{Color.RED}未能识别出文本内容{Color.RESET}\n")
+        print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 识别结果 ':─^52}─┐{Color.RESET}")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.RED}未能识别出文本内容{Color.RESET}")
+        print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
         return
     
-    print(f"\n{Color.GREEN}{Color.BOLD}识别结果:{Color.RESET}\n")
-    print(f"{Color.CYAN}{result_text}{Color.RESET}\n")
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 识别结果 ':─^52}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {result_text}")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def print_audio_files(directory="./audio"):
     """列出音频文件目录"""
@@ -100,7 +107,9 @@ def print_audio_files(directory="./audio"):
     if not os.path.exists(directory):
         try:
             os.makedirs(directory)
-            print(f"{Color.YELLOW}已创建音频目录: {directory}{Color.RESET}")
+            print(f"{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 已创建音频目录 ':─^48}─┐{Color.RESET}")
+            print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {directory}")
+            print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
         except Exception as e:
             print(f"{Color.RED}创建目录失败: {str(e)}{Color.RESET}")
             return
@@ -108,9 +117,9 @@ def print_audio_files(directory="./audio"):
     # 支持的音频格式
     audio_extensions = ['.wav']
     
-    print(f"\n{Color.CYAN}{Color.BOLD}音频文件目录:{Color.RESET}")
-    print(f"{Color.YELLOW}目录: {os.path.abspath(directory)}{Color.RESET}")
-    print("-" * 60)
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 音频文件目录 ':─^50}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} 目录: {os.path.abspath(directory)}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.GRAY}{'─'*56}{Color.RESET}")
     
     # 查找音频文件
     audio_files = []
@@ -119,7 +128,8 @@ def print_audio_files(directory="./audio"):
             audio_files.append((file, os.path.getsize(os.path.join(directory, file))))
     
     if not audio_files:
-        print(f"{Color.YELLOW}未找到音频文件{Color.RESET}\n")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.GRAY}未找到音频文件{Color.RESET}")
+        print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
         return
     
     # 按文件名排序
@@ -128,36 +138,41 @@ def print_audio_files(directory="./audio"):
     # 打印文件列表
     for i, (file, size) in enumerate(audio_files, 1):
         size_str = f"{size / 1024:.1f} KB" if size < 1024 * 1024 else f"{size / (1024 * 1024):.1f} MB"
-        print(f"{i}. {file} ({size_str})")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {i}. {file} ({size_str})")
     
-    print(f"\n{Color.YELLOW}要识别文件，请输入: /recognize {directory}/文件名{Color.RESET}")
-    print("\n")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.GRAY}要识别文件，请输入: /recognize {directory}/文件名{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def print_save_result(success, output_file):
     """打印保存录音结果"""
     if success:
-        print(f"\n{Color.GREEN}录音已保存至: {output_file}{Color.RESET}\n")
+        print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 录音已保存 ':─^52}─┐{Color.RESET}")
+        print(f"{Color.BRIGHT_BLUE}│{Color.RESET} 文件路径: {output_file}")
+        print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
     else:
-        print(f"\n{Color.RED}录音保存失败{Color.RESET}\n")
+        print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 录音保存失败 ':─^50}─┐{Color.RESET}")
+        print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def print_help_speech():
     """打印语音识别帮助信息"""
-    print(f"\n{Color.CYAN}{Color.BOLD}语音识别命令帮助:{Color.RESET}")
-    print(f"  {Color.GREEN}/record [持续时间] {Color.RESET}- 录音并识别")
-    print(f"    例如: /record 5")
-    print(f"    持续时间默认为5秒，可以指定1-60秒之间的值")
-    
-    print(f"\n  {Color.GREEN}/recognize <文件路径> {Color.RESET}- 识别音频文件")
-    print(f"    例如: /recognize audio/test.wav")
-    print(f"    仅支持16k/16bit单声道PCM格式的WAV文件")
-    
-    print(f"\n  {Color.GREEN}/save <文件名> [持续时间] {Color.RESET}- 录音并保存")
-    print(f"    例如: /save test.wav 10")
-    print(f"    文件将保存在audio目录下，持续时间默认为5秒")
-    
-    print(f"\n  {Color.GREEN}/files {Color.RESET}- 列出音频文件目录")
-    print(f"  {Color.GREEN}/back {Color.RESET}- 返回聊天模式")
-    print(f"  {Color.GREEN}/help {Color.RESET}- 显示此帮助信息\n")
+    print(f"\n{Color.BRIGHT_BLUE}{Color.BOLD}┌─{' 语音识别命令帮助 ':─^48}─┐{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/record [持续时间] {Color.RESET}- 录音并识别")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   例如: /record 5")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   持续时间默认为5秒，可以指定1-60秒之间的值")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/recognize <文件路径> {Color.RESET}- 识别音频文件")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   例如: /recognize audio/test.wav")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   仅支持16k/16bit单声道PCM格式的WAV文件")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/save <文件名> [持续时间] {Color.RESET}- 录音并保存")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   例如: /save test.wav 10")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}   文件将保存在audio目录下，持续时间默认为5秒")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET}")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/files {Color.RESET}- 列出音频文件目录")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/back {Color.RESET}- 返回聊天模式")
+    print(f"{Color.BRIGHT_BLUE}│{Color.RESET} {Color.BRIGHT_CYAN}/help {Color.RESET}- 显示此帮助信息")
+    print(f"{Color.BRIGHT_BLUE}└{'─'*58}┘{Color.RESET}\n")
 
 def parse_record_command(command):
     """解析录音命令
@@ -248,7 +263,7 @@ def ensure_audio_dir(directory="./audio"):
             os.makedirs(directory)
             return True
         except Exception as e:
-            print(f"{Color.RED}创建音频目录失败: {str(e)}{Color.RESET}")
+            print(f"{Color.RED}创建目录失败: {str(e)}{Color.RESET}")
             return False
     return True
 
@@ -257,6 +272,3 @@ if __name__ == "__main__":
     print_speech_welcome()
     print_speech_header()
     print_help_speech()
-    print_recording_animation(3)
-    print_recognizing_animation()
-    print_speech_result("这是一段测试识别结果文本。") 
